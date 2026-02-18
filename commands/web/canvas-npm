@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#ddev-generated
+# Remove the line above if you don't want this file to be overwritten when you run
+# ddev add-on get FreelyGive/ddev-drupal-canvas-create
+#
+# This file comes from https://github.com/FreelyGive/ddev-drupal-canvas-create
+#
+## Description: Run npm commands in the Drupal Canvas directory
+## Usage: canvas-npm [options] [command]
+## Example: "ddev canvas-npm install"
+
+cd /var/www/html/storybook
+npm "$@"

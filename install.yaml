@@ -1,6 +1,10 @@
 name: drupal-canvas-create
 
 project_files:
-  - docker-compose.drupal-canvas-create.yaml
-
+  - config.drupal-canvas.yaml
+  - commands/web/canvas-create
+  - commands/web/canvas-npm
+  - commands/web/canvas-npx
+post_install_actions:
+  - echo -e "\n##\n# Run \`ddev canvas-create\` to init the Acquia Nebula storybook before running \`ddev restart\`.\n##"
 ddev_version_constraint: '>= v1.24.3'

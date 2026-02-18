@@ -1,0 +1,12 @@
+#ddev-generated
+# Expose storybook on port 6006.
+web_extra_exposed_ports:
+  - name: storybook
+    container_port: 6006
+    http_port: 6005
+    https_port: 6006
+# Run storybook as a daemon.
+web_extra_daemons:
+  - name: storybook
+    command: npm run dev -- --host=0.0.0.0
+    directory: /var/www/html/storybook

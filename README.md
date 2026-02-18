@@ -7,7 +7,7 @@
 
 ## Overview
 
-This add-on integrates Drupal Canvas Create into your [DDEV](https://ddev.com/) project.
+This add-on integrates @drupal-canvas/create into your [DDEV](https://ddev.com/) project.
 
 ## Installation
 
@@ -20,28 +20,9 @@ After installation, make sure to commit the `.ddev` directory to version control
 
 ## Usage
 
-| Command | Description |
-| ------- | ----------- |
-| `ddev describe` | View service status and used ports for Drupal Canvas Create |
-| `ddev logs -s drupal-canvas-create` | Check Drupal Canvas Create logs |
-
-## Advanced Customization
-
-To change the Docker image:
-
-```bash
-ddev dotenv set .ddev/.env.drupal-canvas-create --drupal-canvas-create-docker-image="ddev/ddev-utilities:latest"
-ddev add-on get FreelyGive/ddev-drupal-canvas-create
-ddev restart
-```
-
-Make sure to commit the `.ddev/.env.drupal-canvas-create` file to version control.
-
-All customization options (use with caution):
-
-| Variable | Flag | Default |
-| -------- | ---- | ------- |
-| `DRUPAL_CANVAS_CREATE_DOCKER_IMAGE` | `--drupal-canvas-create-docker-image` | `ddev/ddev-utilities:latest` |
+| Command           | Description                                                |
+|-------------------|------------------------------------------------------------|
+| `ddev npm-canvas` | Run npm commands in the Drupal Canvas Storybook directory. |
 
 ## Credits
 

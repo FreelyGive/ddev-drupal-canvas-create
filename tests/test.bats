@@ -19,7 +19,7 @@ setup() {
   export GITHUB_REPO=FreelyGive/ddev-drupal-canvas-create
 
   TEST_BREW_PREFIX="$(brew --prefix 2>/dev/null || true)"
-  export BATS_LIB_PATH="${BATS_LIB_PATH}:${TEST_BREW_PREFIX}/lib:/usr/lib/bats"
+  export BATS_LIB_PATH="${BATS_LIB_PATH:-}:${TEST_BREW_PREFIX}/lib:/usr/lib/bats:/usr/local/lib/bats"
   bats_load_library bats-assert
   bats_load_library bats-file
   bats_load_library bats-support
@@ -39,17 +39,21 @@ setup() {
 }
 
 health_checks() {
-  # Do something useful here that verifies the add-on
-
-  # You can check for specific information in headers:
-  # run curl -sfI https://${PROJNAME}.ddev.site
-  # assert_output --partial "HTTP/2 200"
-  # assert_output --partial "test_header"
-
-  # Or check if some command gives expected output:
-  DDEV_DEBUG=true run ddev launch
+  # Verify storybook is accessible on port 6006.
+  # The daemon may take a moment to start, so retry with backoff.
+  local url="https://${PROJNAME}.ddev.site:6006"
+  local max_attempts=30
+  local attempt=0
+  while (( attempt < max_attempts )); do
+    if curl -sfk -o /dev/null "${url}"; then
+      break
+    fi
+    (( ++attempt ))
+    sleep 2
+  done
+  run curl -sfk -o /dev/null -w "%{http_code}" "${url}"
   assert_success
-  assert_output --partial "FULLURL https://${PROJNAME}.ddev.site"
+  assert_output "200"
 }
 
 teardown() {
@@ -69,6 +73,11 @@ teardown() {
   echo "# ddev add-on get ${DIR} with project ${PROJNAME} in $(pwd)" >&3
   run ddev add-on get "${DIR}"
   assert_success
+  # Run canvas-create to scaffold storybook.
+  # Use yes to keep stdin open so the process completes fully (including npm install).
+  # The first empty line accepts the default agent selection at the interactive prompt.
+  run bash -c "yes '' | ddev canvas-create"
+  assert_success
   run ddev restart -y
   assert_success
   health_checks
@@ -79,6 +88,9 @@ teardown() {
   set -eu -o pipefail
   echo "# ddev add-on get ${GITHUB_REPO} with project ${PROJNAME} in $(pwd)" >&3
   run ddev add-on get "${GITHUB_REPO}"
+  assert_success
+  # Run canvas-create to scaffold storybook.
+  run bash -c "yes '' | ddev canvas-create"
   assert_success
   run ddev restart -y
   assert_success
