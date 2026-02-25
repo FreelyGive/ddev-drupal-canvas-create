@@ -1,4 +1,8 @@
 #ddev-generated
+# Ensure dependencies are installed on start, so the daemon can start successfully.
+hooks:
+  post-start:
+    - exec: '[[ -d /var/www/html/storybook/node_modules ]] || npm --prefix /var/www/html/storybook ci'
 # Expose storybook on port 6006.
 web_extra_exposed_ports:
   - name: storybook
